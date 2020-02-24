@@ -24,6 +24,11 @@ namespace Nager.AmazonProductAdvertising
         private readonly AmazonEndpointConfig _amazonEndpointConfig;
         private readonly AmazonResourceValidator _amazonResourceValidator;
 
+
+        public string Debug_RequestJson { get; internal set; }
+        public string Debug_ResponseJson { get; internal set; }
+
+
         /// <summary>
         /// Amazon Product Advertising Client
         /// </summary>
@@ -71,6 +76,7 @@ namespace Nager.AmazonProductAdvertising
                     "BrowseNodeInfo.BrowseNodes",
                     "BrowseNodeInfo.BrowseNodes.Ancestor",
                     "BrowseNodeInfo.BrowseNodes.SalesRank",
+                    "BrowseNodeInfo.WebsiteSalesRank",
 
                     "Images.Primary.Small",
                     "Images.Primary.Medium",
@@ -172,6 +178,7 @@ namespace Nager.AmazonProductAdvertising
                     "BrowseNodeInfo.BrowseNodes",
                     "BrowseNodeInfo.BrowseNodes.Ancestor",
                     "BrowseNodeInfo.BrowseNodes.SalesRank",
+                    "BrowseNodeInfo.WebsiteSalesRank",
 
                     "Images.Primary.Small",
                     "Images.Primary.Medium",
@@ -329,6 +336,8 @@ namespace Nager.AmazonProductAdvertising
 
         private async Task<HttpResponse> RequestAsync(string type, string json)
         {
+            Debug_RequestJson = json;
+
             var serviceName = "ProductAdvertisingAPI";
 
             var amzTarget = $"com.amazon.paapi5.v1.ProductAdvertisingAPIv1.{type}";
@@ -348,6 +357,7 @@ namespace Nager.AmazonProductAdvertising
             {
                 var content = await responseMessage.Content.ReadAsStringAsync();
                 //System.IO.File.WriteAllText($"{DateTime.Now:hhmmssfff}.json", content);
+                Debug_ResponseJson = content;
                 return new HttpResponse { Successful = responseMessage.IsSuccessStatusCode, StatusCode = responseMessage.StatusCode, Content = content };
             }
         }
